@@ -1,0 +1,16 @@
+{
+    "name": "Project.Universal",
+    "rootNamespace": "",
+    "references": [
+        "GUID:83a883cc83fda02458171566acfcad7b"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
