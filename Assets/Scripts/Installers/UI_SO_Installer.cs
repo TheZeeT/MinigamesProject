@@ -8,6 +8,7 @@ public class UI_SO_Installer : ScriptableObjectInstaller
     public override void InstallBindings()
     {
         Container.DeclareSignal<UI_ButtonPressedSignal>().OptionalSubscriber();
+        Container.DeclareSignal<UI_ButtonBlockedSignal>().OptionalSubscriber();
     }
     #endregion
 }

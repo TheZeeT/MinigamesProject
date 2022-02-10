@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
@@ -17,25 +14,23 @@ public class UI_ButtonVisuals : MonoBehaviour, IPointerEnterHandler, IPointerExi
     [SerializeField] private ColorBlock _colorsImage;
     [Header("Text Color")]
     [SerializeField] private ColorBlock _colorsText;
-    //[SerializeField] private T
     #endregion
 
     #region Private
     [Inject] private SignalBus _signalBus;
     private bool _isHoveringOver;
     private bool _isPressedDown;
+    private bool _isBlocked;
 
     private Tweener _tweenerImage = null;
     private Tweener _tweenerText = null;
-    #endregion
-
-    #region Public
     #endregion
 
     #region Functions
     private void Awake()
     {
         _signalBus.Subscribe<UI_ButtonPressedSignal>(OnButtonPressed);
+        _signalBus.Subscribe<UI_ButtonBlockedSignal>(OnButtonBlocked);
 
         Highlight();
     }
@@ -43,6 +38,7 @@ public class UI_ButtonVisuals : MonoBehaviour, IPointerEnterHandler, IPointerExi
     private void OnDestroy()
     {
         _signalBus.Unsubscribe<UI_ButtonPressedSignal>(OnButtonPressed);
+        _signalBus.Unsubscribe<UI_ButtonBlockedSignal>(OnButtonBlocked);
     }
 
     private void OnButtonPressed(UI_ButtonPressedSignal signal)
@@ -50,6 +46,15 @@ public class UI_ButtonVisuals : MonoBehaviour, IPointerEnterHandler, IPointerExi
         if (signal.button.gameObject == gameObject)
         {
             _isPressedDown = signal.isPressed;
+            Highlight();
+        }
+    }
+
+    private void OnButtonBlocked(UI_ButtonBlockedSignal signal)
+    {
+        if (signal.button.gameObject == gameObject)
+        {
+            _isBlocked = !signal.isInteractable;
             Highlight();
         }
     }
@@ -87,18 +92,14 @@ public class UI_ButtonVisuals : MonoBehaviour, IPointerEnterHandler, IPointerExi
 
     private Color GetColor(ColorBlock colorBlock)
     {
-        if (_isPressedDown)
+        if (_isBlocked)
+            return colorBlock.disabledColor;
+        else if (_isPressedDown)
             return colorBlock.pressedColor;
         else if (_isHoveringOver)
             return colorBlock.highlightedColor;
         else
             return colorBlock.normalColor;
     }
-    #endregion
-
-    #region Gizmos
-    #endregion
-
-    #region Classes
     #endregion
 }
